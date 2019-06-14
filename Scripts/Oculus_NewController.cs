@@ -2,8 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-//[RequireComponent(typeof(GvrTrackedController))]
 public class Oculus_NewController : MonoBehaviour {
+
+	// primary = left
+	public enum CtlMode { LEFT, RIGHT };
+	public CtlMode ctlMode = CtlMode.LEFT;
 
     public bool triggerPressed = false;
     public bool padPressed = false;
@@ -29,56 +32,83 @@ public class Oculus_NewController : MonoBehaviour {
     [HideInInspector] public Vector3 startPos = Vector3.zero;
     [HideInInspector] public Vector3 endPos = Vector3.zero;
     [HideInInspector] public float triggerVal;
-
-    private OVRInput.Controller ctl;
-
+    
     private float touchPadLimit = 0.6f; // 0.7f;
-
-    private void Awake() {
-        ctl = GetComponent<OVRInput.Controller>();
-		OVRInput.Get(OVRInput.Button.PrimaryHandTrigger, ctl);
-	}
 
     private void Update() {
         resetButtons();
 		//checkTriggerVal();
 		//checkPadDir();
 
-		if (OVRInput.GetDown(OVRInput.Button.PrimaryHandTrigger, ctl)) {
-            triggerPressed = true;
-            triggerDown = true;
-            startPos = transform.position;
-        } else if (OVRInput.GetUp(OVRInput.Button.PrimaryHandTrigger, ctl)) {
-            triggerPressed = false;
-            triggerUp = true;
-            endPos = transform.position;
-        }
+		if (ctlMode == CtlMode.LEFT) { 
+			if (OVRInput.GetDown(OVRInput.Button.PrimaryIndexTrigger)) {
+	            triggerPressed = true;
+	            triggerDown = true;
+	            startPos = transform.position;
+	        } else if (OVRInput.GetUp(OVRInput.Button.PrimaryIndexTrigger)) {
+	            triggerPressed = false;
+	            triggerUp = true;
+	            endPos = transform.position;
+	        }
 
-		/*
-        if (OVRInput.Get(OVRInput.Button.Down, ctl)) {
-            padPressed = true;
-            padDown = true;
-        } else if (OVRInput.Get(OVRInput.Button.Up, ctl)) {
-            padPressed = false;
-            padUp = true;
-        }
+			if (OVRInput.GetDown(OVRInput.Button.PrimaryHandTrigger)) {
+				gripped = true;
+				gripDown = true;
+			} else if (OVRInput.GetUp(OVRInput.Button.PrimaryHandTrigger)) {
+				gripped = false;
+				gripUp = true;
+			}
 
-        if (OVRInput.Get(OVRInput.Button.Down, ctl)) {
-            gripped = true;
-            gripDown = true;
-        } else if (OVRInput.Get(OVRInput.Button.Up, ctl)) {
-            gripped = false;
-            gripUp = true;
-        }
+	        if (OVRInput.GetDown(OVRInput.Button.One, OVRInput.Controller.LTrackedRemote)) {
+	            padPressed = true;
+	            padDown = true;
+	        } else if (OVRInput.GetUp(OVRInput.Button.One, OVRInput.Controller.LTrackedRemote)) {
+	            padPressed = false;
+	            padUp = true;
+	        }
 
-        if (OVRInput.Get(OVRInput.Button.Down, ctl)) {
-            menuPressed = true;
-            menuDown = true;
-        } else if (OVRInput.Get(OVRInput.Button.Up, ctl)) {
-            menuPressed = false;
-            menuUp = true;
-        }
-    */
+	        if (OVRInput.GetDown(OVRInput.Button.Two, OVRInput.Controller.LTrackedRemote)) {
+	            menuPressed = true;
+	            menuDown = true;
+	        } else if (OVRInput.GetUp(OVRInput.Button.Two, OVRInput.Controller.LTrackedRemote)) {
+				menuPressed = false;
+				menuUp = true;
+			}
+		} else {
+			if (OVRInput.GetDown(OVRInput.Button.SecondaryIndexTrigger)) {
+				triggerPressed = true;
+				triggerDown = true;
+				startPos = transform.position;
+			} else if (OVRInput.GetUp(OVRInput.Button.SecondaryIndexTrigger)) {
+				triggerPressed = false;
+				triggerUp = true;
+				endPos = transform.position;
+			}
+
+			if (OVRInput.GetDown(OVRInput.Button.SecondaryHandTrigger)) {
+				gripped = true;
+				gripDown = true;
+			} else if (OVRInput.GetUp(OVRInput.Button.SecondaryHandTrigger)) {
+				gripped = false;
+				gripUp = true;
+			}
+
+			if (OVRInput.GetDown(OVRInput.Button.One, OVRInput.Controller.RTrackedRemote)) {
+				padPressed = true;
+				padDown = true;
+			} else if (OVRInput.GetUp(OVRInput.Button.One, OVRInput.Controller.RTrackedRemote)) {
+				padPressed = false;
+				padUp = true;
+			}
+
+			if (OVRInput.GetDown(OVRInput.Button.Two, OVRInput.Controller.RTrackedRemote)) {
+				menuPressed = true;
+				menuDown = true;
+			} else if (OVRInput.GetUp(OVRInput.Button.Two, OVRInput.Controller.RTrackedRemote)) {
+				menuPressed = false;
+				menuUp = true;
+			}
+		}
 
 	}
 

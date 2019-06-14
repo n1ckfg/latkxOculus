@@ -55,9 +55,10 @@ public class Oculus_SevenMove : MonoBehaviour {
             doRotate();
             doTranslate(deltaPosAvg);
             angle = (getAngle(ctl0.transform, centerPos) + getAngle(ctl1.transform, centerPos)) / 2f;
-        } else if (ctl0.gripped && !ctl1.gripped) {
-            doTranslate(new Vector3(deltaPosMain.x, -deltaPosMain.y, deltaPosMain.z));
-            angle = getAngle(ctl0.transform, ctl0.transform.forward);// centerPos);
+		// positioning of right hand grip is in the way
+        //} else if (ctl0.gripped && !ctl1.gripped) {
+            //doTranslate(new Vector3(deltaPosMain.x, -deltaPosMain.y, deltaPosMain.z));
+            //angle = getAngle(ctl0.transform, ctl0.transform.forward);// centerPos);
         } else if (!ctl0.gripped && ctl1.gripped) {
             doTranslate(new Vector3(deltaPosAlt.x, -deltaPosAlt.y, deltaPosAlt.z));
             angle = getAngle(ctl1.transform, ctl1.transform.forward);// centerPos);

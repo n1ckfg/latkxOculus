@@ -21,9 +21,10 @@ public class latkInput_Oculus : MonoBehaviour {
         if ((ctl0.triggerPressed && !ctl0.menuPressed)) {// || Input.GetKeyDown(KeyCode.Space)) {
             latk.clicked = true;
         } else {
-            latk.clicked = false;
+			latk.clicked = false;
         }
 
+		/*
         if (ctl0.triggerPressed && ctl0.menuPressed) {
             latk.inputErase();
         } else if (!ctl0.triggerPressed && ctl0.menuPressed) {
@@ -103,6 +104,7 @@ public class latkInput_Oculus : MonoBehaviour {
                 }
             }
         }
+        */
     }
 
     IEnumerator repeatFrameForward() {
