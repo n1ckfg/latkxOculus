@@ -1,4 +1,7 @@
-﻿using System.Collections;
+﻿// https://docs.unity3d.com/Manual/OculusControllers.html
+// https://developer.oculus.com/documentation/unity/latest/concepts/unity-ovrinput/
+
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -21,6 +24,10 @@ public class Oculus_NewController : MonoBehaviour {
     public bool gripUp = false;
     public bool menuUp = false;
 
+    public bool extra1Pressed = false;
+    public bool extra1Down = false;
+    public bool extra1Up = false;
+
     public bool padDirUp = false;
     public bool padDirDown = false;
     public bool padDirLeft = false;
@@ -37,10 +44,11 @@ public class Oculus_NewController : MonoBehaviour {
 
     private void Update() {
         resetButtons();
-		//checkTriggerVal();
-		//checkPadDir();
+		checkTriggerVal();
+		checkPadDir();
 
 		if (ctlMode == CtlMode.LEFT) { 
+            // trigger
 			if (OVRInput.GetDown(OVRInput.Button.PrimaryIndexTrigger)) {
 	            triggerPressed = true;
 	            triggerDown = true;
@@ -51,6 +59,7 @@ public class Oculus_NewController : MonoBehaviour {
 	            endPos = transform.position;
 	        }
 
+            // grip
 			if (OVRInput.GetDown(OVRInput.Button.PrimaryHandTrigger)) {
 				gripped = true;
 				gripDown = true;
@@ -59,22 +68,34 @@ public class Oculus_NewController : MonoBehaviour {
 				gripUp = true;
 			}
 
-	        if (OVRInput.GetDown(OVRInput.Button.One, OVRInput.Controller.LTrackedRemote)) {
+            // X button
+	        if (OVRInput.GetDown(OVRInput.Button.Three)) {
 	            padPressed = true;
 	            padDown = true;
-	        } else if (OVRInput.GetUp(OVRInput.Button.One, OVRInput.Controller.LTrackedRemote)) {
+	        } else if (OVRInput.GetUp(OVRInput.Button.Three)) {
 	            padPressed = false;
 	            padUp = true;
 	        }
 
-	        if (OVRInput.GetDown(OVRInput.Button.Two, OVRInput.Controller.LTrackedRemote)) {
+            // Y button
+	        if (OVRInput.GetDown(OVRInput.Button.Four)) {
 	            menuPressed = true;
 	            menuDown = true;
-	        } else if (OVRInput.GetUp(OVRInput.Button.Two, OVRInput.Controller.LTrackedRemote)) {
+	        } else if (OVRInput.GetUp(OVRInput.Button.Four)) {
 				menuPressed = false;
 				menuUp = true;
 			}
+
+            // thumbstick press
+            if (OVRInput.GetDown(OVRInput.Button.PrimaryThumbstick)) {
+                extra1Pressed = true;
+                extra1Down = true;
+            } else if (OVRInput.GetUp(OVRInput.Button.PrimaryThumbstick)) {
+                extra1Pressed = false;
+                extra1Up = true;
+            }
 		} else {
+            // trigger
 			if (OVRInput.GetDown(OVRInput.Button.SecondaryIndexTrigger)) {
 				triggerPressed = true;
 				triggerDown = true;
@@ -85,6 +106,7 @@ public class Oculus_NewController : MonoBehaviour {
 				endPos = transform.position;
 			}
 
+            // grip
 			if (OVRInput.GetDown(OVRInput.Button.SecondaryHandTrigger)) {
 				gripped = true;
 				gripDown = true;
@@ -93,23 +115,33 @@ public class Oculus_NewController : MonoBehaviour {
 				gripUp = true;
 			}
 
-			if (OVRInput.GetDown(OVRInput.Button.One, OVRInput.Controller.RTrackedRemote)) {
+            // A button
+			if (OVRInput.GetDown(OVRInput.Button.One)) {
 				padPressed = true;
 				padDown = true;
-			} else if (OVRInput.GetUp(OVRInput.Button.One, OVRInput.Controller.RTrackedRemote)) {
+			} else if (OVRInput.GetUp(OVRInput.Button.One)) {
 				padPressed = false;
 				padUp = true;
 			}
 
-			if (OVRInput.GetDown(OVRInput.Button.Two, OVRInput.Controller.RTrackedRemote)) {
+            // B button
+			if (OVRInput.GetDown(OVRInput.Button.Two)) {
 				menuPressed = true;
 				menuDown = true;
-			} else if (OVRInput.GetUp(OVRInput.Button.Two, OVRInput.Controller.RTrackedRemote)) {
+			} else if (OVRInput.GetUp(OVRInput.Button.Two)) {
 				menuPressed = false;
 				menuUp = true;
 			}
-		}
 
+            // thumbstick press
+            if (OVRInput.GetDown(OVRInput.Button.SecondaryThumbstick)) {
+                extra1Pressed = true;
+                extra1Down = true;
+            } else if (OVRInput.GetUp(OVRInput.Button.SecondaryThumbstick)) {
+                extra1Pressed = false;
+                extra1Up = true;
+            }
+		}
 	}
 
 	private void resetButtons() {
@@ -122,6 +154,9 @@ public class Oculus_NewController : MonoBehaviour {
         gripUp = false;
         menuUp = false;
 
+        extra1Down = false;
+        extra1Up = false;
+
         padDirUp = false;
         padDirDown = false;
         padDirLeft = false;
@@ -129,13 +164,20 @@ public class Oculus_NewController : MonoBehaviour {
         padDirCenter = true;
     }
 
-    //private void checkTriggerVal() {
-        //triggerVal = device.GetAxis(Valve.VR.EVRButtonId.k_EButton_SteamVR_Trigger).x;
-    //}
+    private void checkTriggerVal() {
+        if (ctlMode == CtlMode.LEFT) {
+            triggerVal = OVRInput.Get(OVRInput.Axis1D.PrimaryIndexTrigger);
+        } else {
+            triggerVal = OVRInput.Get(OVRInput.Axis1D.SecondaryIndexTrigger);
+        }
+    }
 
-    /*
     private void checkPadDir() {
-        touchpad = ctl.ControllerInputDevice.TouchPos; //device.GetAxis(Valve.VR.EVRButtonId.k_EButton_Axis0);
+        if (ctlMode == CtlMode.LEFT) {
+            touchpad = OVRInput.Get(OVRInput.Axis2D.PrimaryThumbstick);
+        } else {
+            touchpad = OVRInput.Get(OVRInput.Axis2D.SecondaryThumbstick);
+        }
 
         if (touchpad.y > touchPadLimit) {
             padDirUp = true;
@@ -157,7 +199,6 @@ public class Oculus_NewController : MonoBehaviour {
             padDirCenter = false;
         }
     }
-	*/
 
     /*
     float defaultVibrationVal = 2f;
