@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class latkInput_Oculus : MonoBehaviour {
+public class LatkInputOculus : MonoBehaviour {
 
-    public Oculus_NewController ctl0;
-    public Oculus_NewController ctl1;
+    public Oculus_NewController ctlMain;
+    public Oculus_NewController ctlAlt;
     public LightningArtist latk;
     public Renderer collisionGuideRen;
 
@@ -18,31 +18,31 @@ public class latkInput_Oculus : MonoBehaviour {
 
     private void Update() {
         // draw
-        if ((ctl0.triggerPressed && !ctl0.menuPressed)) {// || Input.GetKeyDown(KeyCode.Space)) {
+        if ((ctlMain.triggerPressed && !ctlMain.menuPressed)) {// || Input.GetKeyDown(KeyCode.Space)) {
             latk.clicked = true;
         } else {
 			latk.clicked = false;
         }
 
 		/*
-        if (ctl0.triggerPressed && ctl0.menuPressed) {
+        if (ctlMain.triggerPressed && ctlMain.menuPressed) {
             latk.inputErase();
-        } else if (!ctl0.triggerPressed && ctl0.menuPressed) {
+        } else if (!ctlMain.triggerPressed && ctlMain.menuPressed) {
             latk.inputPush();
             latk.inputColorPick();
         }
 
         // new frame
-        if (ctl1.triggerDown && ctl0.menuPressed) {
+        if (ctlAlt.triggerDown && ctlMain.menuPressed) {
             latk.inputNewFrameAndCopy();
             Debug.Log("Ctl: New Frame Copy");
-        } else if (ctl1.triggerDown && !ctl0.menuPressed) {
+        } else if (ctlAlt.triggerDown && !ctlMain.menuPressed) {
             latk.inputNewFrame();
             Debug.Log("Ctl: New Frame");
         }
 
         // show / hide all frames
-        if ((!ctl0.menuPressed && ctl1.menuDown)) {
+        if ((!ctlMain.menuPressed && ctlAlt.menuDown)) {
             latk.showOnionSkin = !latk.showOnionSkin;
             if (latk.showOnionSkin) {
                 latk.inputShowFrames();
@@ -53,52 +53,52 @@ public class latkInput_Oculus : MonoBehaviour {
 
         // ~ ~ ~ ~ ~ ~ ~ ~ ~
 
-        if (ctl0.menuPressed && ctl1.menuDown) {
+        if (ctlMain.menuPressed && ctlAlt.menuDown) {
             latk.inputDeleteFrame();
         }
 
         // dir pad main
-        if (ctl0.padDown) {
-            if (ctl0.padDirCenter) {
+        if (ctlMain.padDown) {
+            if (ctlMain.padDirCenter) {
                 if (latk.brushMode == LightningArtist.BrushMode.ADD) {
                     latk.brushMode = LightningArtist.BrushMode.SURFACE;
                 } else {
                     latk.brushMode = LightningArtist.BrushMode.ADD;
                 }
-            } else if (ctl0.padDirUp) {
+            } else if (ctlMain.padDirUp) {
                 StartCoroutine(delayedUseCollisions());
             }
         }
 
-        if (ctl0.padPressed) {
-            if (ctl0.padDirLeft) {
+        if (ctlMain.padPressed) {
+            if (ctlMain.padDirLeft) {
                 latk.brushSizeInc();
-            } else if (ctl0.padDirRight) {
+            } else if (ctlMain.padDirRight) {
                 latk.brushSizeDec();
             }
         }
 
         // dir pad alt
-        if (ctl1.padDown) {
-            if (ctl0.menuPressed) {
-                if (ctl1.padDirCenter) {
+        if (ctlAlt.padDown) {
+            if (ctlMain.menuPressed) {
+                if (ctlAlt.padDirCenter) {
                     // TODO capture
-                } else if (ctl1.padDirUp) {
+                } else if (ctlAlt.padDirUp) {
                     latk.inputNewLayer();
-                } else if (ctl1.padDirLeft) {
+                } else if (ctlAlt.padDirLeft) {
                     latk.inputNextLayer();
-                } else if (ctl1.padDirRight) {
+                } else if (ctlAlt.padDirRight) {
                     latk.inputPreviousLayer();
                 }
             } else {
-                if (ctl1.padDirCenter) {
+                if (ctlAlt.padDirCenter) {
                     latk.inputPlay();
-                } else if (ctl1.padDirUp) {
+                } else if (ctlAlt.padDirUp) {
                     latk.inputFirstFrame();
-                } else if (ctl1.padDirRight) {
+                } else if (ctlAlt.padDirRight) {
                     latk.inputFrameBack();
                     StartCoroutine(repeatFrameBack());
-                } else if (ctl1.padDirLeft) {
+                } else if (ctlAlt.padDirLeft) {
                     latk.inputFrameForward();
                     StartCoroutine(repeatFrameForward());
                 }
@@ -109,7 +109,7 @@ public class latkInput_Oculus : MonoBehaviour {
 
     IEnumerator repeatFrameForward() {
         yield return new WaitForSeconds(repeatDelay);
-        while (ctl1.padPressed && ctl1.padDirLeft) {
+        while (ctlAlt.padPressed && ctlAlt.padDirLeft) {
             latk.inputFrameForward();
             yield return new WaitForSeconds(latk.frameInterval);
         }
@@ -117,7 +117,7 @@ public class latkInput_Oculus : MonoBehaviour {
 
     IEnumerator repeatFrameBack() {
         yield return new WaitForSeconds(repeatDelay);
-        while (ctl1.padPressed && ctl1.padDirRight) {
+        while (ctlAlt.padPressed && ctlAlt.padDirRight) {
             latk.inputFrameBack();
             yield return new WaitForSeconds(latk.frameInterval);
         }
@@ -125,7 +125,7 @@ public class latkInput_Oculus : MonoBehaviour {
 
     IEnumerator delayedUseCollisions() {
         yield return new WaitForSeconds(collisionDelay);
-        if (ctl0.padDirUp) {
+        if (ctlMain.padDirUp) {
             latk.useCollisions = !latk.useCollisions;
             if (collisionGuideRen != null) collisionGuideRen.enabled = latk.useCollisions;
         }

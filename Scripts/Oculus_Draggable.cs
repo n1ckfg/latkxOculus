@@ -3,10 +3,11 @@
 
 using UnityEngine;
 
-public class DraggableOculus : MonoBehaviour {
+public class Oculus_Draggable : MonoBehaviour {
 
 	public Oculus_NewController ctl;
-	public Transform minBound;
+    public Transform rayTransform;
+    public Transform minBound;
 	public bool fixX = false;
 	public bool fixY = false;
 	public bool fixZ = false;
@@ -15,8 +16,8 @@ public class DraggableOculus : MonoBehaviour {
 	bool dragging;
 
 	void FixedUpdate() {
-		Vector3 rayPos = ctl.transform.position;
-		Vector3 rayDir = ctl.transform.forward;
+		Vector3 rayPos = rayTransform.position;
+		Vector3 rayDir = rayTransform.forward;
 
 		if (ctl.menuPressed) {
 			dragging = false;
